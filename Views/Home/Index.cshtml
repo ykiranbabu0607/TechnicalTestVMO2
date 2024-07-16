@@ -1,0 +1,83 @@
+﻿@model List<SaleItem>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    
+    <div class="table-responsive tbl-res">
+        <table id="tblSaleItemData" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Segment  </th>
+                    <th>Country </th>
+                    <th>Product </th>
+                    <th>Discount Band </th>
+                    <th>Units Sold </th>
+                    <th>Manufactoring Price</th>
+                    <th>Sale Price </th>
+                    <th>Date </th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Segment</td>
+                    <td>@item.Country</td>
+                    <td>@item.Product</td>
+                    <td>@item.DiscountBand</td>
+                    <td>@item.UnitsSold</td>
+                    <td>@item.ManufactoringPrice</td>
+                    <td>@item.SalePrice</td>
+                    <td>@item.Date</td>
+                </tr>
+            }
+            <tfoot>
+                <tr>
+                    <th>Segment  </th>
+                    <th>Country </th>
+                    <th>Product </th>
+                    <th>Discount Band </th>
+                    <th>Units Sold </th>
+                    <th>Manufactoring Price</th>
+                    <th>Sale Price </th>
+                    <th>Date </th>
+                </tr>
+            </tfoot>           
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {           
+            $('#tblSaleItemData').DataTable({
+                lengthMenu: [
+                    [10,25,50,100,200, -1],
+                    [10,25,50, 100, 200, 'All']
+                ],
+                initComplete: function () {
+                    this.api()
+                        .columns()
+                        .every(function () {
+                            let column = this;
+                            let title = column.footer().textContent;
+
+                            // Create input element
+                            let input = document.createElement('input');
+                            input.placeholder = title;
+                            column.footer().replaceChildren(input);
+
+                            // Event listener for user input
+                            input.addEventListener('keyup', () => {
+                                if (column.search() !== this.value) {
+                                    column.search(input.value).draw();
+                                }
+                            });
+                        });
+                }
+            })          
+        })
+    </script>
+}
